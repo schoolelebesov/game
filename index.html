@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -55,11 +55,19 @@
         let blueScore = 0;
         let redScore = 0;
 
-        const paddle = {
+        const paddle1 = {
             width: 100,
             height: 10,
             x: canvas.width / 2 - 50,
             y: canvas.height - 20,
+            color: '#000'
+        };
+
+        const paddle2 = {
+            width: 100,
+            height: 10,
+            x: canvas.width / 2 - 50,
+            y: 10,
             color: '#000'
         };
 
@@ -71,7 +79,7 @@
             ctx.closePath();
         }
 
-        function drawPaddle() {
+        function drawPaddle(paddle) {
             ctx.beginPath();
             ctx.rect(paddle.x, paddle.y, paddle.width, paddle.height);
             ctx.fillStyle = paddle.color;
@@ -83,30 +91,34 @@
             ball.x += ball.dx;
             ball.y += ball.dy;
 
-            if (ball.x + ball.radius > canvas.width) {
-                ball.dx = -ball.dx;
+            if (ball.y + ball.radius > canvas.height) {
+                ball.dy = -ball.dy;
                 redScore++;
                 redScoreElement.textContent = `Red Team: ${redScore}`;
             }
 
-            if (ball.x - ball.radius < 0) {
-                ball.dx = -ball.dx;
+            if (ball.y - ball.radius < 0) {
+                ball.dy = -ball.dy;
                 blueScore++;
                 blueScoreElement.textContent = `Blue Team: ${blueScore}`;
             }
 
-            if (ball.y + ball.radius > canvas.height) {
-                ball.dy = -ball.dy;
+            if (ball.x + ball.radius > canvas.width || ball.x - ball.radius < 0) {
+                ball.dx = -ball.dx;
             }
 
-            if (ball.y - ball.radius < 0) {
+            if (
+                ball.y + ball.radius >= paddle1.y &&
+                ball.x >= paddle1.x &&
+                ball.x <= paddle1.x + paddle1.width
+            ) {
                 ball.dy = -ball.dy;
             }
 
             if (
-                ball.y + ball.radius >= paddle.y &&
-                ball.x >= paddle.x &&
-                ball.x <= paddle.x + paddle.width
+                ball.y - ball.radius <= paddle2.y + paddle2.height &&
+                ball.x >= paddle2.x &&
+                ball.x <= paddle2.x + paddle2.width
             ) {
                 ball.dy = -ball.dy;
             }
@@ -114,17 +126,22 @@
 
         function movePaddle(event) {
             const key = event.key;
-            if (key === 'ArrowLeft' && paddle.x > 0) {
-                paddle.x -= 20;
-            } else if (key === 'ArrowRight' && paddle.x + paddle.width < canvas.width) {
-                paddle.x += 20;
+            if (key === 'ArrowLeft' && paddle1.x > 0) {
+                paddle1.x -= 20;
+            } else if (key === 'ArrowRight' && paddle1.x + paddle1.width < canvas.width) {
+                paddle1.x += 20;
+            } else if (key === 'a' && paddle2.x > 0) {
+                paddle2.x -= 20;
+            } else if (key === 'd' && paddle2.x + paddle2.width < canvas.width) {
+                paddle2.x += 20;
             }
         }
 
         function gameLoop() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             drawBall();
-            drawPaddle();
+            drawPaddle(paddle1);
+            drawPaddle(paddle2);
             updateBall();
             requestAnimationFrame(gameLoop);
         }
@@ -134,4 +151,3 @@
     </script>
 </body>
 </html>
-
