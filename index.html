@@ -1,4 +1,4 @@
-<<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -47,7 +47,7 @@
             x: canvas.width / 2,
             y: canvas.height / 2,
             radius: 15,
-            dx: 2,
+            dx: 0,
             dy: 2,
             color: '#007bff'
         };
@@ -92,13 +92,13 @@
             ball.y += ball.dy;
 
             if (ball.y + ball.radius > canvas.height) {
-                ball.dy = -ball.dy;
+                ball.dy = -Math.abs(ball.dy);
                 redScore++;
                 redScoreElement.textContent = `Red Team: ${redScore}`;
             }
 
             if (ball.y - ball.radius < 0) {
-                ball.dy = -ball.dy;
+                ball.dy = Math.abs(ball.dy);
                 blueScore++;
                 blueScoreElement.textContent = `Blue Team: ${blueScore}`;
             }
@@ -112,7 +112,7 @@
                 ball.x >= paddle1.x &&
                 ball.x <= paddle1.x + paddle1.width
             ) {
-                ball.dy = -ball.dy;
+                ball.dy = -Math.abs(ball.dy);
             }
 
             if (
@@ -120,7 +120,7 @@
                 ball.x >= paddle2.x &&
                 ball.x <= paddle2.x + paddle2.width
             ) {
-                ball.dy = -ball.dy;
+                ball.dy = Math.abs(ball.dy);
             }
         }
 
